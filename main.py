@@ -1,3 +1,4 @@
+import tortoise
 import discord
 import os
 import dotenv
@@ -22,6 +23,16 @@ intents = discord.Intents.default()
 intents.members = True
 
 client = commands.Bot(intents=intents, command_prefix="!")
+
+
+async def init_db():
+    if not os.path.exists("db"):
+        os.mkdir("db")
+    await tortoise.Tortoise.init(
+        db_url="sqlite://db/database.db",
+        modules={"models": ["data.models"]},
+    )
+    await tortoise.Tortoise.generate_schemas()
 
 
 async def load_cogs() -> None:
@@ -76,6 +87,9 @@ async def on_ready() -> None:
         raise RuntimeError("Missing permissions. Please grant the bot the following permissions:\n - Send messages\n - Manage roles\n - View channel\n - Use application commands")
 
     await load_cogs()
+
+    await client.tree.sync()
+    await init_db()
     print("Bot is online")
 
 
