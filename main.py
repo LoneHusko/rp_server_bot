@@ -73,7 +73,7 @@ async def on_ready() -> None:
         me = await guild.fetch_member(user.id)
 
     if not me.guild_permissions >= REQUIRED_PERMISSIONS:
-        raise RuntimeError("Missing permissions")
+        raise RuntimeError("Missing permissions. Please grant the bot the following permissions:\n - Send messages\n - Manage roles\n - View channel\n - Use application commands")
 
     await load_cogs()
     print("Bot is online")
