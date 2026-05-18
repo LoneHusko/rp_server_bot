@@ -33,7 +33,6 @@ class MembersCog(commands.Cog):
         :raises RuntimeError: If the bot is not in the target guild or the default role cannot be found.
         :return: None
         """
-        print(f"{member} has joined the server!")
         guild = self.bot.get_guild(GUILD_ID)
         if guild is None:
             raise RuntimeError("Bot is not in the target guild")
