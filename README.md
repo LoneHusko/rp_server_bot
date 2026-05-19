@@ -69,7 +69,12 @@ Do **not** commit your `.env` file or bot token to version control.
 4. Copy the bot token and use it as `BOT_TOKEN`.
 5. Enable the required privileged intent:
     - **Server Members Intent**
-6. Invite the bot to your server with the required permissions.
+    - **Message Content Intent**
+6. Invite the bot to your server with these permissions:
+    - Send Messages
+    - Manage Roles
+    - View Channels
+    - Use Application Commands
 
 ## Required Bot Permissions
 
@@ -79,8 +84,6 @@ The bot checks for the following permissions:
 - Manage Roles
 - View Channels
 - Use Application Commands
-
-Please also make sure that you have enable the **Server Members Intent** and the **Message Content Intent** in the Discord Developer Portal.
 
 The bot also needs its highest role to be above the default role it assigns to new members.
 
@@ -118,9 +121,10 @@ The bot has the following commands:
 
 Bot functionality is organized into cogs.
 
-The current cog is:
+The current cogs are:
 
-- `members.py` — handles member join events and assigns the configured default role.
+- `members.py` - handles member join events and assigns the configured default role.
+- `clockin.py` - handles clockin and clockout commands.
 
 Additional `.py` files placed in the `cogs` directory can be loaded automatically by the bot.
 

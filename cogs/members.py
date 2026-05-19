@@ -35,10 +35,12 @@ class MembersCog(commands.Cog):
         """
         guild = self.bot.get_guild(GUILD_ID)
         if guild is None:
-            raise RuntimeError("Bot is not in the target guild")
+            print("Bot is not in the target guild")
+            return
         role = guild.get_role(DEFAULT_ROLE_ID)
         if role is None:
-            raise RuntimeError("Default role is not found on this guild")
+            print("Default role is not found on this guild")
+            return
         await member.add_roles(role)
 
 

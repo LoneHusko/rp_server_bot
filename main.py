@@ -98,7 +98,7 @@ async def on_ready() -> None:
 
     if not me.guild_permissions >= REQUIRED_PERMISSIONS:
         raise RuntimeError(
-            "Missing permissions. Please grant the bot the following permissions:\n"
+            "Missing permissions. \n Please grant the bot the following permissions:\n"
             " - Send messages\n"
             " - Manage roles\n"
             " - View channel\n"
