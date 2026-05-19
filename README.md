@@ -134,8 +134,7 @@ Additional `.py` files placed in the `cogs` directory can be loaded automaticall
 
 Make sure your `.env` file contains:
 
-```
-env
+```env
 BOT_TOKEN=your_bot_token_here
 ```
 
