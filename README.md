@@ -56,6 +56,7 @@ Create a `.env` file in the project root:
 BOT_TOKEN=your_bot_token_here
 GUILD_ID=your_guild_id_here
 DEFAULT_ROLE_ID=your_default_role_id_here
+MANAGER_ROLE_NAME="Your manager role's name (optional)"
 ```
 
 Do **not** commit your `.env` file or bot token to version control.
