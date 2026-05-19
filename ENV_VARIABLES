@@ -3,3 +3,4 @@ This is a list of environment variables that should be set as written below:
 BOT_TOKEN
 GUILD_ID
 DEFAULT_ROLE_ID
+MANAGER_ROLE_NAME

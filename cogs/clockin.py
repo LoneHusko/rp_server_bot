@@ -1,5 +1,10 @@
 import discord
 from discord.ext import commands
+from dotenv import load_dotenv
+from decorators import role_decorators
+
+load_dotenv()
+MANAGER_ROLE_NAME = os.getenv("MANAGER_ROLE_NAME") or "Shift manager"
 
 
 class ClockView(discord.ui.View):
@@ -34,6 +39,7 @@ class ClockInCog(commands.Cog):
         self.bot = bot
 
     @commands.hybrid_command(name="clockin_init")
+    @role_decorators.requires_role_or_admin(MANAGER_ROLE_NAME)
     async def clockin_init(self, ctx: commands.Context):
         """Create the clock-in panel"""
 
@@ -46,9 +52,9 @@ class ClockInCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.bot.add_view(ClockView())
+        ...
 
 
 async def setup(bot: commands.Bot):
-
     await bot.add_cog(ClockInCog(bot))
+    bot.add_view(ClockView())

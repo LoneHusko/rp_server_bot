@@ -21,6 +21,8 @@ if GUILD_ID == 0:
 intents = discord.Intents.default()
 # noinspection PyDunderSlots,PyUnresolvedReferences
 intents.members = True
+# noinspection PyDunderSlots
+intents.message_content = True
 
 client = commands.Bot(intents=intents, command_prefix="!")
 
@@ -47,6 +49,14 @@ async def load_cogs() -> None:
                 await client.load_extension(f'cogs.{filename[:-3]}')
             except Exception as e:
                 print(f'Failed to load cog {filename}: {e}')
+
+
+@client.event
+async def on_command_error(ctx: commands.Context, error: commands.CommandError) -> None:
+    if isinstance(error, commands.CheckFailure):
+        return
+
+    raise error
 
 
 @client.event

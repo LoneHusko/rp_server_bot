@@ -1,7 +1,8 @@
-
 # RP Server Bot
 
-A Discord bot for providing basic functionalities for an RP server. The bot currently verifies that it is running in the configured Discord server, checks that it has the required permissions, loads cog extensions, and automatically assigns a default role to new members when they join.
+A Discord bot for providing basic functionalities for an RP server. The bot currently verifies that it is running in the
+configured Discord server, checks that it has the required permissions, loads cog extensions, and automatically assigns
+a default role to new members when they join.
 
 ## Features
 
@@ -19,10 +20,13 @@ A Discord bot for providing basic functionalities for an RP server. The bot curr
 - `python-dotenv`
 
 Install all Python dependencies with:
+
 ```cmd
 pip install -r requirements.txt
 ```
+
 ## Project Structure
+
 ```text
 rp_server_bot/
 ├── cogs/
@@ -33,22 +37,26 @@ rp_server_bot/
 ├── README.md
 └── requirements.txt
 ```
+
 ## Environment Variables
 
 The bot requires the following environment variables:
 
-| Variable | Description |
-| --- | --- |
-| `BOT_TOKEN` | Your Discord bot token |
-| `GUILD_ID` | The ID of the Discord server the bot should run in |
-| `DEFAULT_ROLE_ID` | The ID of the role assigned to new members |
+| Variable                       | Description                                                                                                                                                          |
+|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `BOT_TOKEN`                    | Your Discord bot token                                                                                                                                               |
+| `GUILD_ID`                     | The ID of the Discord server the bot should run in                                                                                                                   |
+| `DEFAULT_ROLE_ID`              | The ID of the role assigned to new members                                                                                                                           |
+| `MANAGER_ROLE_NAME` (optional) | The role's name that will be trated as the manager. The default is "Shift manager". If the role doesn't exist only administrators can use the clockin admin fuctions |
 
 Create a `.env` file in the project root:
+
 ```env
 BOT_TOKEN=your_bot_token_here
 GUILD_ID=your_guild_id_here
 DEFAULT_ROLE_ID=your_default_role_id_here
 ```
+
 Do **not** commit your `.env` file or bot token to version control.
 
 ## Discord Bot Setup
@@ -58,7 +66,7 @@ Do **not** commit your `.env` file or bot token to version control.
 3. Open the **Bot** section.
 4. Copy the bot token and use it as `BOT_TOKEN`.
 5. Enable the required privileged intent:
-   - **Server Members Intent**
+    - **Server Members Intent**
 6. Invite the bot to your server with the required permissions.
 
 ## Required Bot Permissions
@@ -85,13 +93,17 @@ To copy server and role IDs:
 ## Running the Bot
 
 After installing dependencies and creating your `.env` file, run:
+
 ```cmd
 python main.py
 ```
+
 If everything is configured correctly, the bot will start and print:
+
 ```text
 Bot is online
 ```
+
 ## Cogs
 
 Bot functionality is organized into cogs.
@@ -107,10 +119,12 @@ Additional `.py` files placed in the `cogs` directory can be loaded automaticall
 ### `BOT_TOKEN is not set`
 
 Make sure your `.env` file contains:
+
 ```
 env
 BOT_TOKEN=your_bot_token_here
 ```
+
 ### `GUILD_ID is not set`
 
 Make sure `GUILD_ID` is set to your Discord server ID.
