@@ -78,6 +78,8 @@ The bot checks for the following permissions:
 - View Channels
 - Use Application Commands
 
+Please also make sure that you have enable the **Server Members Intent** and the **Message Content Intent** in the Discord Developer Portal.
+
 The bot also needs its highest role to be above the default role it assigns to new members.
 
 ## Getting IDs from Discord
@@ -103,6 +105,12 @@ If everything is configured correctly, the bot will start and print:
 ```text
 Bot is online
 ```
+
+## Commands
+The bot has the following commands:
+
+ - `/clockin_init`: Initializes the clockin system. Sends a message to the channel where the command was used which users can use to clock in and clock out.
+ - `/work_stats [member] [public]`: Displays the work stats of a member divided into daily, weekly, monthly, and yearly work times. If no member is specified, the command will display the stats of the user who used the command. If the `public` parameter is set to `true`, the command reponse will be visible to everyone in the server.
 
 ## Cogs
 

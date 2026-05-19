@@ -1,8 +1,8 @@
-import tortoise
-import discord
 import os
+import discord
 import dotenv
 from discord.ext import commands
+from tortoise import Tortoise
 
 dotenv.load_dotenv()
 
@@ -24,31 +24,46 @@ intents.members = True
 # noinspection PyDunderSlots
 intents.message_content = True
 
-client = commands.Bot(intents=intents, command_prefix="!")
-
 
 async def init_db():
     if not os.path.exists("db"):
         os.mkdir("db")
-    await tortoise.Tortoise.init(
-        db_url="sqlite://db/database.db",
-        modules={"models": ["data.models"]},
-    )
-    await tortoise.Tortoise.generate_schemas()
+
+    if not Tortoise._inited:
+        await Tortoise.init(
+            db_url="sqlite://db/database.db",
+            modules={"models": ["data.models"]},
+            timezone="UTC",
+        )
+        await Tortoise.generate_schemas()
 
 
-async def load_cogs() -> None:
+async def load_cogs(bot: commands.Bot) -> None:
     """
     Load and initialize all cog extensions in the cogs directory asynchronously.
 
     :return: None
     """
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
+    for filename in os.listdir("./cogs"):
+        if filename.endswith(".py"):
             try:
-                await client.load_extension(f'cogs.{filename[:-3]}')
+                await bot.load_extension(f"cogs.{filename[:-3]}")
             except Exception as e:
-                print(f'Failed to load cog {filename}: {e}')
+                print(f"Failed to load cog {filename}: {e}")
+
+
+class RPServerBot(commands.Bot):
+    async def setup_hook(self) -> None:
+        await init_db()
+        await load_cogs(self)
+        await self.tree.sync()
+
+    async def close(self) -> None:
+        await Tortoise.close_connections()
+        await super().close()
+
+
+client = RPServerBot(intents=intents, command_prefix="!")
 
 
 @client.event
@@ -62,19 +77,7 @@ async def on_command_error(ctx: commands.Context, error: commands.CommandError) 
 @client.event
 async def on_ready() -> None:
     """
-    Handles the bot's login and initialization process after establishing a connection to Discord.
-
-    Verifies the bot's presence in the correct guild, ensures the bot is not a member of multiple guilds,
-    retrieves the bot's user and member data, checks for required permissions in the guild, and loads the
-    necessary cogs for the bot's functionality.
-
-    :raises RuntimeError:
-        If the bot is not a member of the specified guild.
-        If the bot is a member of multiple guilds at once.
-        If the bot user information is unavailable.
-        If the permissions required to function in the guild are not granted to the bot.
-
-    :return: None
+    Handles the bot's login checks after establishing a connection to Discord.
     """
     guild = client.get_guild(GUILD_ID)
 
@@ -94,12 +97,14 @@ async def on_ready() -> None:
         me = await guild.fetch_member(user.id)
 
     if not me.guild_permissions >= REQUIRED_PERMISSIONS:
-        raise RuntimeError("Missing permissions. Please grant the bot the following permissions:\n - Send messages\n - Manage roles\n - View channel\n - Use application commands")
+        raise RuntimeError(
+            "Missing permissions. Please grant the bot the following permissions:\n"
+            " - Send messages\n"
+            " - Manage roles\n"
+            " - View channel\n"
+            " - Use application commands"
+        )
 
-    await load_cogs()
-
-    await client.tree.sync()
-    await init_db()
     print("Bot is online")
 
 
