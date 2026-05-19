@@ -30,11 +30,12 @@ pip install -r requirements.txt
 ```text
 rp_server_bot/
 ├── cogs/
+│   ├── clockin.py
 │   └── members.py
-├── ENV_VARIABLES
-├── LICENSE
+├── data/
+│   └── models.py
 ├── main.py
-├── README.md
+├── .env (not included in repo)
 └── requirements.txt
 ```
 
