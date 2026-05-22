@@ -166,7 +166,10 @@ class ClockInCog(commands.Cog):
         member = member or ctx.author
         role = discord.utils.find(lambda r: r.name == MANAGER_ROLE_NAME, ctx.guild.roles)
 
-        if member != ctx.author and (not ctx.author.guild_permissions.administrator or role not in ctx.author.roles):
+        is_manager = role in ctx.author.roles
+        is_admin = ctx.author.guild_permissions.administrator
+
+        if member != ctx.author and not (is_admin or is_manager):
             await ctx.reply(
                 "Only managers and administrators can view other members' work stats.",
                 ephemeral=True
