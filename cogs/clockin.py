@@ -1,8 +1,8 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from decorators import role_decorators
-from data.models import Session
+from data.models import Session, ClockOutReminder
 from datetime import datetime, timezone, timedelta
 import os
 
@@ -130,6 +130,57 @@ def _sum_sessions(sessions, now: datetime) -> timedelta:
 class ClockInCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+        self.clock_out_reminders.start()
+
+    def cog_unload(self) -> None:
+        self.clock_out_reminders.cancel()
+
+    @tasks.loop(minutes=10)
+    async def clock_out_reminders(self) -> None:
+        """
+        Periodically checks for sessions where users have not clocked out for more than
+        12 hours and sends them a reminder. If a reminder has already been sent for a
+        particular session, it skips sending the reminder again.
+
+        This task runs at an interval of 10 minutes.
+
+        :raises discord.Forbidden: If the bot lacks permission to send a message to a user.
+        :raises discord.HTTPException: If an HTTP request to the Discord API fails.
+        :return: None
+        """
+        now = datetime.now(timezone.utc)
+        reminder_cutoff = now - timedelta(hours=12)
+
+        sessions = await Session.filter(
+            clock_out=None,
+            clock_in__lte=reminder_cutoff,
+        )
+
+        for session in sessions:
+            reminder_exists = await ClockOutReminder.filter(session=session).exists()
+            if reminder_exists:
+                continue
+
+            try:
+                user = self.bot.get_user(int(session.user_id))
+
+                if user is None:
+                    user = await self.bot.fetch_user(int(session.user_id))
+
+                await user.send(
+                    "Hi! You’ve been clocked in for over 12 hours. "
+                    "If you forgot to clock out, please do so when you can."
+                )
+            except discord.Forbidden:
+                pass
+            except discord.HTTPException:
+                pass
+            finally:
+                await ClockOutReminder.get_or_create(session=session)
+
+    @clock_out_reminders.before_loop
+    async def before_clock_out_reminders(self) -> None:
+        await self.bot.wait_until_ready()
 
     @commands.hybrid_command(name="clockin_init")
     @role_decorators.requires_role_or_admin(MANAGER_ROLE_NAME)

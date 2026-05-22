@@ -9,3 +9,16 @@ class Session(models.Model):
 
     class Meta:
         table = "sessions"
+
+
+class ClockOutReminder(models.Model):
+    id = fields.IntField(pk=True)
+    session = fields.OneToOneField(
+        "models.Session",
+        related_name="clock_out_reminder",
+        on_delete=fields.CASCADE,
+    )
+    sent_at = fields.DatetimeField(auto_now_add=True)
+
+    class Meta:
+        table = "clock_out_reminders"
